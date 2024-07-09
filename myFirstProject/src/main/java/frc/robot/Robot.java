@@ -9,8 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,9 +28,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     joystick = new Joystick(0);
     motor = new TalonSRX(1);
-
   }
-
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -54,30 +50,34 @@ public class Robot extends TimedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {
-
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-
-  }
+  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-  }
+  public void teleopInit() {}
     
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(joystick.getRawButton(1)) {
+    if (joystick.getRawButton(1)) {
+      System.out.println("1");
       motor.set(ControlMode.PercentOutput, 0.3);
     }
 
-    if(joystick.getRawButton(2)) {
-      motor.set(ControlMode.PercentOutput, 0.3);
+    else if(joystick.getRawButton(2)) {
+      System.out.println("2");
+      motor.set(ControlMode.PercentOutput, -0.3);
+    }
+    else if(joystick.getRawAxis(3) > 0.05 || joystick.getRawAxis(3) < 0.05) {
+      motor.set(ControlMode.PercentOutput, joystick.getRawAxis(1));
+    }
+    
+    else {
+      motor.set(ControlMode.PercentOutput, 0);
     }
   }
 
