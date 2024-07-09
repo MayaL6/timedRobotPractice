@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,14 +17,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-
+  private TalonSRX frontLeft;
+  private TalonSRX frontRight;
+  private TalonSRX rearLeft;
+  private TalonSRX rearRight;
+  private Joystick joystick;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    frontRight = new TalonSRX(4);
+    rearRight = new TalonSRX(3);
 
+    frontRight.follow(rearRight);
+
+    frontLeft = new TalonSRX(2);
+    rearLeft = new TalonSRX(1);
+
+    frontLeft.follow(rearLeft);
+
+    joystick = new Joystick(0);
   }
 
   /**
@@ -60,7 +76,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(joystick.getRawAxis(3) > 0.05) {
+      frontRight.set(ControlMode.PercentOutput, joystick.getRawAxis(1));
+    }
+    else if(joystick.getRawAxis(1) > 0.05) {
+      frontRight.set(ControlMode.PercentOutput, joystick.getRawAxis(3));
+    }
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
