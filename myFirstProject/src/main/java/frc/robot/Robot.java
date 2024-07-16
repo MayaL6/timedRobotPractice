@@ -4,7 +4,17 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -13,6 +23,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
+  private DigitalInput beamBreak;
+  private TalonSRX frontLeft;
+  private TalonSRX rearLeft;
+  private TalonSRX rearRight;
+  private TalonSRX frontRight;
+
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -20,6 +37,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    frontLeft = new TalonSRX(2);
+    frontRight = new TalonSRX(4);
+    rearLeft = new TalonSRX(1);
+    rearRight = new TalonSRX(3);
+
+    frontLeft.follow(rearLeft);
+    frontRight.follow(rearRight);
+
+    frontRight.setInverted(true);
+
+    beamBreak = new DigitalInput(1);
+    beamBreak.get();
   }
 
   /**
@@ -54,11 +83,23 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(beamBreak.get()) {
+      frontLeft.set(ControlMode.PercentOutput, 0.3);
+      frontRight.set(ControlMode.PercentOutput, 0.3);
+
+    } else {
+      frontLeft.set(ControlMode.PercentOutput, 0);
+      frontRight.set(ControlMode.PercentOutput, 0);
+    }
+    SmartDashboard.putBoolean("Beam Break Detection", beamBreak.get());
+
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
