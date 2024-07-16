@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(beamBreak.get()) {
+    if(!(beamBreak.get())) {
       frontLeft.set(ControlMode.PercentOutput, 0.3);
       frontRight.set(ControlMode.PercentOutput, 0.3);
 
